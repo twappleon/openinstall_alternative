@@ -8,6 +8,13 @@
   ],
   "routes": [
     {
+      "src": "/downloads/(.*)",
+      "dest": "/downloads/$1",
+      "headers": {
+        "Content-Type": "application/vnd.android.package-archive"
+      }
+    },
+    {
       "src": "/(.*)",
       "dest": "/$1"
     }
