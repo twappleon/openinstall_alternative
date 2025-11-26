@@ -1,15 +1,21 @@
 {
+  "cleanUrls": true,
+  "trailingSlash": false,
   "rewrites": [
     {
       "source": "/downloads/(.*)",
-      "destination": "/downloads/$1",
-      "headers": {
-        "Content-Type": "application/vnd.android.package-archive"
-      }
-    },
+      "destination": "/downloads/$1"
+    }
+  ],
+  "headers": [
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "source": "/downloads/(.*\\.apk)",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/vnd.android.package-archive"
+        }
+      ]
     }
   ]
 }
