@@ -1,0 +1,13 @@
+⚠️ 重要提示：404 问题解决方案
+
+问题原因：
+Vercel 项目的 Root Directory 配置错误
+
+解决方法：
+1. 访问 https://vercel.com
+2. 登录并找到 openinstall-web 项目
+3. Settings → General → Root Directory
+4. 设置为：openinstall-web
+5. 保存并重新部署
+
+这是唯一能解决 404 的方法！
