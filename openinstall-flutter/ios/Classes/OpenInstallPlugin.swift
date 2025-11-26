@@ -38,3 +38,4 @@ public class OpenInstallPlugin: NSObject, FlutterPlugin {
 }
 
 
+

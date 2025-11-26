@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
@@ -6,18 +5,14 @@ void main() {
   // 添加全局错误处理
   FlutterError.onError = (FlutterErrorDetails details) {
     FlutterError.presentError(details);
-    if (kDebugMode) {
-      print('Flutter Error: ${details.exception}');
-      print('Stack trace: ${details.stack}');
-    }
+    debugPrint('Flutter Error: ${details.exception}');
+    debugPrint('Stack trace: ${details.stack}');
   };
 
   // 处理异步错误
   PlatformDispatcher.instance.onError = (error, stack) {
-    if (kDebugMode) {
-      print('Platform Error: $error');
-      print('Stack trace: $stack');
-    }
+    debugPrint('Platform Error: $error');
+    debugPrint('Stack trace: $stack');
     return true;
   };
 

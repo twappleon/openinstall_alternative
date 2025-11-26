@@ -55,3 +55,4 @@ class OpenInstallPlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
 }
 
 
+
