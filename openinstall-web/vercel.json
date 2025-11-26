@@ -1,21 +1,22 @@
 {
-  "cleanUrls": true,
-  "trailingSlash": false,
-  "rewrites": [
+  "version": 2,
+  "builds": [
     {
-      "source": "/downloads/(.*)",
-      "destination": "/downloads/$1"
+      "src": "**",
+      "use": "@vercel/static"
     }
   ],
-  "headers": [
+  "routes": [
     {
-      "source": "/downloads/(.*\\.apk)",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "application/vnd.android.package-archive"
-        }
-      ]
+      "src": "/downloads/(.*)",
+      "dest": "/downloads/$1",
+      "headers": {
+        "Content-Type": "application/vnd.android.package-archive"
+      }
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
     }
   ]
 }
