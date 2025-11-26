@@ -145,12 +145,14 @@
     <script src="openinstall.js"></script>
     <script>
         // 配置
+        // 动态获取当前域名，确保在不同环境都能正常工作
+        const currentOrigin = window.location.origin;
         const CONFIG = {
-            apiBaseUrl: 'http://localhost:8080/api',
+            apiBaseUrl: 'https://openinstall-backend.zeabur.app/api',
             appScheme: 'yourapp://',
             universalLink: 'https://yourdomain.com',
             iosAppStoreUrl: 'https://apps.apple.com/app/your-app',
-            androidDownloadUrl: 'https://your-server.com/download/app.apk'
+            androidDownloadUrl: currentOrigin + '/downloads/app.apk'
         };
         
         // 初始化

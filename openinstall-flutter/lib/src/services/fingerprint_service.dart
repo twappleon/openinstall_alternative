@@ -16,61 +16,85 @@ class FingerprintService {
 
   /// 收集设备指纹
   Future<DeviceFingerprint> collect() async {
-    // 基础信息
-    final userAgent = await _getUserAgent();
-    final language = _getLanguage();
-    final platform = _platform.operatingSystem;
+    try {
+      // 基础信息
+      final userAgent = await _getUserAgent();
+      final language = _getLanguage();
+      final platform = _platform.operatingSystem;
 
-    // 屏幕信息
-    final screenData = await _getScreenInfo();
-    final screenWidth = screenData['width'] as int?;
-    final screenHeight = screenData['height'] as int?;
-    final screenColorDepth = screenData['colorDepth'] as int?;
-    final pixelRatio = screenData['pixelRatio'] as double?;
-    final screenScale = screenData['scale'] as double?;
-    final screenDensity = screenData['density'] as double?;
+      // 屏幕信息
+      final screenData = await _getScreenInfo();
+      final screenWidth = screenData['width'] as int?;
+      final screenHeight = screenData['height'] as int?;
+      final screenColorDepth = screenData['colorDepth'] as int?;
+      final pixelRatio = screenData['pixelRatio'] as double?;
+      final screenScale = screenData['scale'] as double?;
+      final screenDensity = screenData['density'] as double?;
 
-    // 时区
-    final timezoneData = _getTimezone();
-    final timezone = timezoneData['timezone'] as String?;
-    final timezoneOffset = timezoneData['offset'] as int?;
+      // 时区
+      final timezoneData = _getTimezone();
+      final timezone = timezoneData['timezone'] as String?;
+      final timezoneOffset = timezoneData['offset'] as int?;
 
-    // 设备信息
-    String? osVersion;
-    String? deviceModel;
-    String? deviceBrand;
-    String? deviceName;
+      // 设备信息
+      String? osVersion;
+      String? deviceModel;
+      String? deviceBrand;
+      String? deviceName;
 
-    if (_platform.isAndroid) {
-      final androidInfo = await _deviceInfo.androidInfo;
-      osVersion = androidInfo.version.release;
-      deviceModel = androidInfo.model;
-      deviceBrand = androidInfo.brand;
-      deviceName = androidInfo.device;
-    } else if (_platform.isIOS) {
-      final iosInfo = await _deviceInfo.iosInfo;
-      osVersion = iosInfo.systemVersion;
-      deviceModel = iosInfo.model;
-      deviceName = iosInfo.name;
+      try {
+        if (_platform.isAndroid) {
+          final androidInfo = await _deviceInfo.androidInfo;
+          osVersion = androidInfo.version.release;
+          deviceModel = androidInfo.model;
+          deviceBrand = androidInfo.brand;
+          deviceName = androidInfo.device;
+        } else if (_platform.isIOS) {
+          final iosInfo = await _deviceInfo.iosInfo;
+          osVersion = iosInfo.systemVersion;
+          deviceModel = iosInfo.model;
+          deviceName = iosInfo.name;
+        }
+      } catch (e) {
+        // 如果获取设备信息失败，使用默认值
+        print('获取设备信息失败: $e');
+      }
+
+      return DeviceFingerprint(
+        userAgent: userAgent,
+        language: language,
+        platform: platform,
+        screenWidth: screenWidth,
+        screenHeight: screenHeight,
+        screenColorDepth: screenColorDepth,
+        pixelRatio: pixelRatio,
+        screenScale: screenScale,
+        screenDensity: screenDensity,
+        timezone: timezone,
+        timezoneOffset: timezoneOffset,
+        osVersion: osVersion,
+        deviceModel: deviceModel,
+        deviceBrand: deviceBrand,
+        deviceName: deviceName,
+      );
+    } catch (e, stackTrace) {
+      // 如果收集设备指纹失败，返回一个最小化的指纹对象
+      print('收集设备指纹失败: $e');
+      print('堆栈跟踪: $stackTrace');
+      return DeviceFingerprint(
+        userAgent: 'Unknown',
+        language: 'en',
+        platform: _platform.operatingSystem,
+        screenWidth: 375,
+        screenHeight: 812,
+        screenColorDepth: 24,
+        pixelRatio: 2.0,
+        screenScale: 2.0,
+        screenDensity: 2.0,
+        timezone: 'UTC',
+        timezoneOffset: 0,
+      );
     }
-
-    return DeviceFingerprint(
-      userAgent: userAgent,
-      language: language,
-      platform: platform,
-      screenWidth: screenWidth,
-      screenHeight: screenHeight,
-      screenColorDepth: screenColorDepth,
-      pixelRatio: pixelRatio,
-      screenScale: screenScale,
-      screenDensity: screenDensity,
-      timezone: timezone,
-      timezoneOffset: timezoneOffset,
-      osVersion: osVersion,
-      deviceModel: deviceModel,
-      deviceBrand: deviceBrand,
-      deviceName: deviceName,
-    );
   }
 
   /// 生成设备指纹ID
@@ -87,12 +111,16 @@ class FingerprintService {
 
   /// 获取 User Agent
   Future<String> _getUserAgent() async {
-    if (_platform.isAndroid) {
-      final androidInfo = await _deviceInfo.androidInfo;
-      return 'Android/${androidInfo.version.release} ${androidInfo.model}';
-    } else if (_platform.isIOS) {
-      final iosInfo = await _deviceInfo.iosInfo;
-      return 'iOS/${iosInfo.systemVersion} ${iosInfo.model}';
+    try {
+      if (_platform.isAndroid) {
+        final androidInfo = await _deviceInfo.androidInfo;
+        return 'Android/${androidInfo.version.release} ${androidInfo.model}';
+      } else if (_platform.isIOS) {
+        final iosInfo = await _deviceInfo.iosInfo;
+        return 'iOS/${iosInfo.systemVersion} ${iosInfo.model}';
+      }
+    } catch (e) {
+      print('获取 User Agent 失败: $e');
     }
     return 'Unknown';
   }
@@ -136,4 +164,3 @@ class FingerprintService {
     };
   }
 }
-
