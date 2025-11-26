@@ -1,41 +1,22 @@
 #!/bin/bash
 
-# OpenInstall Web 部署脚本
-
-echo "🚀 OpenInstall Web 部署工具"
+echo "部署 OpenInstall Web 到 Vercel"
 echo "================================"
 echo ""
-echo "请选择部署方式："
-echo "1. Vercel (推荐)"
-echo "2. Netlify"
-echo "3. 查看部署说明"
-echo ""
-read -p "请输入选项 (1-3): " choice
 
-case $choice in
-  1)
-    echo ""
-    echo "📦 部署到 Vercel..."
-    echo "首次使用需要登录，请在浏览器中完成登录"
-    echo ""
-    npx vercel login
-    npx vercel --prod
-    ;;
-  2)
-    echo ""
-    echo "📦 部署到 Netlify..."
-    echo "首次使用需要登录，请在浏览器中完成登录"
-    echo ""
-    npx netlify-cli login
-    npx netlify-cli deploy --prod --dir .
-    ;;
-  3)
-    echo ""
-    cat README.md
-    ;;
-  *)
-    echo "无效选项"
+# 检查文件
+if [ ! -f "downloads/app.apk" ]; then
+    echo "❌ 错误: downloads/app.apk 不存在"
     exit 1
-    ;;
-esac
+fi
 
+echo "✅ APK 文件存在: $(ls -lh downloads/app.apk | awk '{print $5}')"
+echo ""
+
+# 尝试部署
+echo "开始部署..."
+npx vercel --prod --yes
+
+echo ""
+echo "部署完成！"
+echo "访问: https://openinstall-web.vercel.app/"
