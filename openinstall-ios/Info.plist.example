@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- URL Scheme 配置 -->
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>yourapp</string>
+            </array>
+        </dict>
+    </array>
+    
+    <!-- Universal Link 配置 -->
+    <key>com.apple.developer.associated-domains</key>
+    <array>
+        <string>applinks:yourdomain.com</string>
+    </array>
+    
+    <!-- 其他配置... -->
+</dict>
+</plist>
+
+

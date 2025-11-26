@@ -1,0 +1,43 @@
+name: openinstall_flutter
+description: OpenInstall Flutter SDK - 设备指纹匹配 + 延迟深度链接
+version: 1.0.0
+homepage: https://github.com/yourusername/openinstall-flutter
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: ">=3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # HTTP 请求
+  http: ^1.1.0
+  
+  # 设备信息
+  device_info_plus: ^9.1.0
+  
+  # 平台信息
+  platform: ^3.1.0
+  
+  # 深度链接（暂未使用，如需要可后续添加）
+  # uni_links: ^0.5.1
+  
+  # 日志
+  logger: ^2.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: com.openinstall.flutter
+        pluginClass: OpenInstallPlugin
+      ios:
+        pluginClass: OpenInstallPlugin
+
+
