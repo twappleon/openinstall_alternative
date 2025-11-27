@@ -79,7 +79,8 @@ public class TrackingService {
         // 1. 先尝试精确匹配
         String fingerprintId = fingerprintService.generateFingerprintId(fingerprint);
         TrackingData data = getTrackingData(fingerprintId);
-        
+        log.info("精确匹配: fingerprintId={}, params={}", fingerprintId, data);
+
         if (data != null && !data.getMatched() && data.getMatchCount() < 3) {
             // 匹配成功，标记为已使用
             data.setMatched(true);
@@ -100,7 +101,8 @@ public class TrackingService {
     private TrackingData fuzzyMatch(DeviceFingerprint targetFingerprint) {
         String indexKey = buildIndexKey(targetFingerprint);
         Set<Object> candidateIds = redisTemplate.opsForSet().members(REDIS_INDEX_PREFIX + indexKey);
-        
+        log.info("模糊匹配成功: candidateIds={}, indexKey={}", candidateIds, indexKey);
+
         if (candidateIds == null || candidateIds.isEmpty()) {
             return null;
         }
@@ -112,7 +114,8 @@ public class TrackingService {
         for (Object idObj : candidateIds) {
             String fingerprintId = (String) idObj;
             TrackingData candidate = getTrackingData(fingerprintId);
-            
+            log.info("模糊匹配成功: fingerprintId={}, candidate={}", fingerprintId, candidate);
+
             if (candidate == null || candidate.getMatched() || candidate.getMatchCount() >= 3) {
                 continue;
             }
@@ -137,7 +140,8 @@ public class TrackingService {
             log.info("模糊匹配成功: fingerprintId={}, score={}, params={}", 
                 bestMatch.getFingerprintId(), highestScore, bestMatch.getParams());
         }
-        
+        log.info("模糊匹配成功: fingerprintId={}, params={}", targetFingerprint, bestMatch);
+
         return bestMatch;
     }
     
