@@ -25,6 +25,9 @@ dependencies:
   
   # 日志
   logger: ^2.0.0
+  
+  # 加密（用于 MD5）
+  crypto: ^3.0.3
 
 dev_dependencies:
   flutter_test:

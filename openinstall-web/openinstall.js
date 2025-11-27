@@ -140,17 +140,35 @@ const OpenInstall = (function() {
     }
     
     /**
-     * 生成设备指纹ID
+     * 生成设备指纹ID（与后端保持一致：使用 MD5）
+     * 字段组合：userAgent|platform|screenWidth|screenHeight|timezone|canvasFingerprint前50字符
      */
     function generateFingerprintId(fingerprint) {
-        const str = JSON.stringify(fingerprint);
-        let hash = 0;
-        for (let i = 0; i < str.length; i++) {
-            const char = str.charCodeAt(i);
-            hash = ((hash << 5) - hash) + char;
-            hash = hash & hash; // Convert to 32bit integer
+        // 构建与后端一致的字符串
+        const parts = [
+            fingerprint.userAgent || '',
+            fingerprint.platform || '',
+            fingerprint.screenWidth || '',
+            fingerprint.screenHeight || '',
+            fingerprint.timezone || '',
+            fingerprint.canvasFingerprint ? fingerprint.canvasFingerprint.substring(0, 50) : ''
+        ];
+        const str = parts.join('|');
+        
+        // 使用 crypto-js 计算 MD5（需要引入 crypto-js 库）
+        if (typeof CryptoJS !== 'undefined') {
+            return CryptoJS.MD5(str).toString();
+        } else {
+            // Fallback: 如果 crypto-js 未加载，使用简单哈希（不推荐）
+            console.warn('crypto-js not loaded, using fallback hash');
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
+            }
+            return Math.abs(hash).toString(16).padStart(32, '0');
         }
-        return Math.abs(hash).toString(36);
     }
     
     /**

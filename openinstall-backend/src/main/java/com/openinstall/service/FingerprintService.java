@@ -19,13 +19,15 @@ public class FingerprintService {
     public String generateFingerprintId(DeviceFingerprint fingerprint) {
         try {
             StringBuilder sb = new StringBuilder();
-            sb.append(fingerprint.getUserAgent()).append("|");
-            sb.append(fingerprint.getPlatform()).append("|");
-            sb.append(fingerprint.getScreenWidth()).append("|");
-            sb.append(fingerprint.getScreenHeight()).append("|");
-            sb.append(fingerprint.getTimezone()).append("|");
-            if (fingerprint.getCanvasFingerprint() != null) {
-                sb.append(fingerprint.getCanvasFingerprint().substring(0, Math.min(50, fingerprint.getCanvasFingerprint().length())));
+            // 确保 null 值处理与前端一致（使用空字符串）
+            sb.append(fingerprint.getUserAgent() != null ? fingerprint.getUserAgent() : "").append("|");
+            sb.append(fingerprint.getPlatform() != null ? fingerprint.getPlatform() : "").append("|");
+            sb.append(fingerprint.getScreenWidth() != null ? fingerprint.getScreenWidth().toString() : "").append("|");
+            sb.append(fingerprint.getScreenHeight() != null ? fingerprint.getScreenHeight().toString() : "").append("|");
+            sb.append(fingerprint.getTimezone() != null ? fingerprint.getTimezone() : "").append("|");
+            if (fingerprint.getCanvasFingerprint() != null && !fingerprint.getCanvasFingerprint().isEmpty()) {
+                int length = Math.min(50, fingerprint.getCanvasFingerprint().length());
+                sb.append(fingerprint.getCanvasFingerprint().substring(0, length));
             }
             
             MessageDigest md = MessageDigest.getInstance("MD5");

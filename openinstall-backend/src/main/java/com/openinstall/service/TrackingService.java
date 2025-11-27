@@ -79,7 +79,7 @@ public class TrackingService {
         // 1. 先尝试精确匹配
         String fingerprintId = fingerprintService.generateFingerprintId(fingerprint);
         TrackingData data = getTrackingData(fingerprintId);
-        log.info("精确匹配: fingerprintId={}, params={}", fingerprintId, data);
+        log.info("精确匹配: fingerprintId={}, data={}", fingerprintId, data);
 
         if (data != null && !data.getMatched() && data.getMatchCount() < 3) {
             // 匹配成功，标记为已使用

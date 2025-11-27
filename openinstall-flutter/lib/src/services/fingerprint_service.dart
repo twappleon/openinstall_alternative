@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io' as dart;
+import 'package:crypto/crypto.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:platform/platform.dart';
@@ -97,16 +98,34 @@ class FingerprintService {
     }
   }
 
-  /// 生成设备指纹ID
+  /// 生成设备指纹ID（与后端保持一致：使用 MD5）
+  /// 字段组合：userAgent|platform|screenWidth|screenHeight|timezone|canvasFingerprint前50字符
   String generateFingerprintId(DeviceFingerprint fingerprint) {
-    final json = jsonEncode(fingerprint.toJson());
-    int hash = 0;
-    for (int i = 0; i < json.length; i++) {
-      final char = json.codeUnitAt(i);
-      hash = ((hash << 5) - hash) + char;
-      hash = hash & hash; // Convert to 32bit integer
-    }
-    return hash.abs().toRadixString(36);
+    // 构建与后端一致的字符串
+    final parts = <String>[
+      fingerprint.userAgent ?? '',
+      fingerprint.platform ?? '',
+      fingerprint.screenWidth?.toString() ?? '',
+      fingerprint.screenHeight?.toString() ?? '',
+      fingerprint.timezone ?? '',
+      fingerprint.canvasFingerprint != null
+          ? fingerprint.canvasFingerprint!.substring(
+              0, fingerprint.canvasFingerprint!.length > 50
+                  ? 50
+                  : fingerprint.canvasFingerprint!.length)
+          : '',
+    ];
+    final str = parts.join('|');
+    
+    // 使用 crypto 包计算 MD5
+    return _md5(str);
+  }
+  
+  /// 计算 MD5 哈希
+  String _md5(String input) {
+    final bytes = utf8.encode(input);
+    final digest = md5.convert(bytes);
+    return digest.toString();
   }
 
   /// 获取 User Agent
