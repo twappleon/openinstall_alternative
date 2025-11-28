@@ -37,13 +37,14 @@ public class TrackingController {
             
             // 构建追踪数据
             TrackingData data = new TrackingData();
-            data.setFingerprintId(request.getFingerprintId());
+            // 重要：使用后端统一的算法重新计算 fingerprintId，确保与匹配时一致
+            // 不直接使用前端发送的 fingerprintId，因为不同平台（Web/Flutter）的字段值格式可能不同
             data.setFingerprint(request.getFingerprint());
             data.setParams(request.getParams());
             data.setTimestamp(request.getTimestamp() != null ? request.getTimestamp() : System.currentTimeMillis());
             data.setClientIp(clientIp);
             
-            // 保存数据
+            // 保存数据（内部会重新计算 fingerprintId）
             String fingerprintId = trackingService.saveTrackingData(data);
             
             return ApiResponse.success(new ApiResponse.SaveTrackingResponse(fingerprintId));

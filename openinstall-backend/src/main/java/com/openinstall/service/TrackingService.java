@@ -42,7 +42,13 @@ public class TrackingService {
             data.setTimestamp(now);
         }
         
-        String key = REDIS_KEY_PREFIX + data.getFingerprintId();
+        // 重要：使用后端统一的算法重新计算 fingerprintId
+        // 确保无论前端（Web/Flutter）发送什么格式，后端都用统一算法计算
+        // 这样保存和匹配时使用的 fingerprintId 完全一致
+        String fingerprintId = fingerprintService.generateFingerprintId(data.getFingerprint());
+        data.setFingerprintId(fingerprintId);
+        
+        String key = REDIS_KEY_PREFIX + fingerprintId;
         
         // 保存到 Redis，设置过期时间
         long expireSeconds = (data.getExpiresAt() - now) / 1000;

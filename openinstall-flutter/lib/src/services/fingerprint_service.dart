@@ -110,17 +110,18 @@ class FingerprintService {
       fingerprint.timezone ?? '',
       fingerprint.canvasFingerprint != null
           ? fingerprint.canvasFingerprint!.substring(
-              0, fingerprint.canvasFingerprint!.length > 50
+              0,
+              fingerprint.canvasFingerprint!.length > 50
                   ? 50
                   : fingerprint.canvasFingerprint!.length)
           : '',
     ];
     final str = parts.join('|');
-    
+
     // 使用 crypto 包计算 MD5
     return _md5(str);
   }
-  
+
   /// 计算 MD5 哈希
   String _md5(String input) {
     final bytes = utf8.encode(input);
